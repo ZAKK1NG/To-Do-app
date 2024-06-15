@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Josefin Sans", sans-serif;
+
+   
+   
+  }
+  body  {
+    position: relative;
+    background: var(--transparent);
+  }
+  #particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+    z-index: -10;
+  }
+  :root {
+    --orange: #ff5631;
+    --darkOrange: #883000;
+    --dark: #0d0d0d;
+    --light: #cebea4;
+    --transparent: #1e1e1e;
+    --transparent1: #060606;
+    --green: #57cb4c; 
+  }
+  #modal {
+    width: 400px;
+    background: var(--transparent);
+    position: absolute;
+     top : -20%; 
+    left: 50%;
+    transform: translate(-50% , -50%);
+    transition: all 0.5s;
+    z-index: 10000;
+  }
+  #modal a {
+    text-decoration: none;
+    color: var(--orange);
+}
+  
+   .container {
+    height: 100vh;
+   }
+   
+  .leftSide {
+    background-position: center;
+    background-size: cover;
+    background-image: linear-gradient(to right , rgba(0 , 0 ,  0 ,0.1 ) , rgba(0 , 0 ,  0 ,1 ) ) , url("../assets/todo.jpg");
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .leftSide h1 {
+    font-size: 80px;
+    color: white;
+     
+   font-weight: bold;
+  }
+  .leftSide h1  #do{
+    position: relative;
+    color: var(--orange);
+    
+  }
+  .leftSide h1  #do i{
+    font-size: 55px;
+   position: absolute;
+   top: 5%;
+   left: 100%;
+   
+    
+  }
+  
+  
+  .orange{
+    color:#fa4b24;
+    font-style: normal;
+    letter-spacing: 0.8px;
+    
+  }
+  .rightSide {
+    background-color:  #0d0d0db2;
+    backdrop-filter: blur(50px);
+    box-shadow:  -2px 0 10px var(--dark);
+  }
+  
+  .rightSide .cont   {
+     display: flex;
+     flex-direction: column; 
+     justify-content: space-evenly;
+     height: 100%;
+
+  }
+  .rightSide .cont h1 {
+  text-align: center;
+   font-size: 35px;
+   font-weight: bold;
+   
+  }
+  #password , #username {
+    border: 1px solid var(--light);
+    background-color: var(--transparent);
+    padding: 12px 0;
+    color: #cebea4;
+    padding-left: 12px;
+  }
+  
+
+ #password:focus  , #username:focus{
+    background: var(--transparent);
+    border: none;
+    color: #cebea4;
+    box-shadow: 0 0 10px var(--orange);
+    transition: 0.3s;
+}
+.show-pword {
+  color: #cebea4;
+  font-size: 15px;
+  display: flex;
+  justify-content: end;
+ 
+}
+.show-pword p {
+  cursor: pointer;
+  width: fit-content;
+}
+ 
+.form-label {
+  font-size: 20px;
+  font-weight: normal;
+}
+.social-media {
+ display: flex;
+ width: 80%;
+ margin: 0 auto;
+ justify-content: space-evenly;
+}
+.social-media i {
+   font-size: 40px;
+  color: var(--orange);
+  transition:  all  .5s ease;
+}
+.social-media a:hover i {
+  scale: 1.2;
+ 
+}
+
+#subBtn {
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  padding: 10px 0;
+  color: #cebea4;
+  transition: 0.5s  ;
+  background-color: var(--orange);
+  border : 1px solid var(--orange);
+}
+#subBtn:hover {
+  background-color:  transparent ;
+
+}
+ 
