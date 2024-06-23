@@ -113,7 +113,7 @@ session_start() ;
                       </label>
                       </div>
                       <div class='actions'> 
-                        <a  class='update-link' id='update'  onclick='fct(this,event)'><i class='fa-regular fa-pen-to-square'></i></a>
+                        <a  class='update-link' id='update'  onclick='Update(this,event)'><i class='fa-regular fa-pen-to-square'></i></a>
                         <a href='CRUD/delete.php?name=". urlencode($t["taskname"]) ."' class='delete-link' id='delete' onclick='Del(this , event)'><i class='fa-solid fa-trash'></i></a> 
                       </div>
                     </div>" ; 
@@ -144,7 +144,7 @@ session_start() ;
           }
       }
      
-      function fct(atag, event) {
+      function Update(atag, event) {
         event.preventDefault();
         let actions = atag.closest(".actions");
         let taskItem = actions.closest(".taskItem");
