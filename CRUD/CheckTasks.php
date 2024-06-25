@@ -2,8 +2,8 @@
 session_start();
 
 require "connection.php" ;
- 
 include "functions.php";
+header("location: ../index.php");
 $username = $_SESSION["name"]; 
 $task = sanitize($_POST["taskname"]) ;
 $checked  = $_POST["checkbox_checked"];

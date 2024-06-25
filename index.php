@@ -3,7 +3,9 @@
 // problem : remove the update input in case of not pressing enter 
 // problem : data doesn't get trimmed when sending
 // add done == true if checked
+// complete delete and update functions 
 session_start() ;
+require "CRUD/connection.php";
   if (isset($_COOKIE["username"])){
     $_SESSION["name"] = $_COOKIE["username"];
   } 
@@ -11,7 +13,6 @@ session_start() ;
     header("location:main.php"); 
   }
   
-  require "CRUD/connection.php";
   $sql = "select taskname , done from tasks where username = ? order by DateAjout desc ;";
   $st = $conn->prepare($sql) ;
   $st->execute([$_SESSION["name"]]);
@@ -41,7 +42,7 @@ session_start() ;
       crossorigin="anonymous"
     />
 </head>
-<body onload="check()">
+<body>
     <div class="main">
       <div class="container-fluid sticky-top">
         <div class="container">
@@ -55,7 +56,7 @@ session_start() ;
           
   <!-- Resultat  -->
           <div class="header mt-5 d-flex justify-content-center"> 
-            <div class="result w-50 py-5 mx-auto my-3 d-flex align-items-center justify-content-evenly">
+            <div class="result  py-5  my-3 d-flex align-items-center justify-content-evenly">
               <div class="aside ">
                 <p class="fs-3 fw-semibold m-0">Todo Done </p>
                 <p class="keepitup m-0">keep it up <span><?php echo $_SESSION["name"] ?></span></p>
@@ -72,33 +73,31 @@ session_start() ;
             </div>
           </div>
   <!-- Formulaire  -->
-          <div class="form d-flex mt-3 justify-content-center">
-            <form id="taskadd"  action="CRUD/ajouter.php" method="post" class="d-flex w-50  justify-content-between ">
-              <input type="text" class=" form-control rounded-pill d-flex justify-content-center" placeholder="write your next task" name="task" id="task" autocomplete="off">
+          <div class="  d-flex mt-3 justify-content-center">
+            <div class="d-flex w-50  justify-content-between ">
+              <input type="text" class=" form-control rounded-pill d-flex justify-content-center" placeholder="write your next task" id="task" autocomplete="off">
             
-              <div class="labelDiv  d-flex justify-content-center align-items-center">
-                <label for="task" class="label"><button type="submit" value="submit" name="submit"  ><i class="fa-solid fa-plus"></i></button></label>
+              <div class="labelDiv d-flex justify-content-center align-items-center"  id="taskadd">
+                <label for="task" class="label"><button type="submit"><i class="fa-solid fa-plus"></i></button></label>
               </div>
-            </form>
+            </div>
           </div>
     <!-- Task list -->
           <div id="taskList"  class="d-flex flex-column mt-2 align-items-center">
-            
-            <?php
-              
-            foreach ($tasklist as $t){
-              if($t["done"] == 0 ){
-                echo "<div class='taskItem'>
+            <?php  
+              foreach ($tasklist as $t){
+                if($t["done"] == 0 ){
+                  echo "<div class='taskItem'>
                         <div class='taskInfo'>
                         <label class='check' >
-                          <input type='checkbox' name='checkTask' id='checkTask' onclick='Done(this)'>
+                          <input type='checkbox' name='checkTask' id='checkTask' >
                           <span class='custom-radio'></span>
                           <span id='taskName' for='checkTask'  class='taskName'>" . $t["taskname"] . "</span>
                         </label>
                       </div>
                       <div class='actions'> 
-                        <a  class='update-link' id='update'  onclick='fct(this,event)'><i class='fa-regular fa-pen-to-square'></i></a>
-                        <a href='CRUD/delete.php?name=". urlencode($t["taskname"]) ."' class='delete-link' id='delete' onclick='Del(this , event)'><i class='fa-solid fa-trash'></i></a> 
+                        <a  class='update-link' id='update' data-task='".$t["taskname"]."' ><i class='fa-regular fa-pen-to-square'></i></a>
+                        <a  class='delete-link' id='delete' data-task='".$t["taskname"]."' ><i class='fa-solid fa-trash'></i></a> 
                       </div>
                     </div>" ; 
               }
@@ -107,141 +106,22 @@ session_start() ;
               echo "<div class='taskItem'>
                       <div class='taskInfo'>
                       <label class='check' >
-                        <input type='checkbox' name='checkTask' id='checkTask' checked='true' onclick='Done(this)'>
+                        <input type='checkbox' name='checkTask' id='checkTask' checked >
                         <span class='custom-radio'></span>
                         <span id='taskName' for='checkTask'  class='taskName'>" . $t["taskname"] . "</span>
                       </label>
                       </div>
                       <div class='actions'> 
-                        <a  class='update-link' id='update'  onclick='Update(this,event)'><i class='fa-regular fa-pen-to-square'></i></a>
-                        <a href='CRUD/delete.php?name=". urlencode($t["taskname"]) ."' class='delete-link' id='delete' onclick='Del(this , event)'><i class='fa-solid fa-trash'></i></a> 
+                        <a  class='update-link' id='update' data-task='".$t["taskname"]."'><i class='fa-regular fa-pen-to-square'></i></a>
+                        <a class='delete-link' id='delete' data-task='".$t["taskname"]."'><i class='fa-solid fa-trash'></i></a> 
                       </div>
                     </div>" ; 
               }
-            }
-            
-            ?>
-          
-            
-            
+            }  
+            ?>  
           </div>
       </div>
     </div>
-    
-    
-    <script>
-      function check(){ 
-        // to check the tasks that're done who's coming from the database 
-        let inputs = document.getElementsByTagName("input"); 
-        
-        for(let i = 1 ; i < inputs.length ; i++){   
-          let   name = inputs[i].nextElementSibling.nextElementSibling;
-          if (inputs[i].checked) {
-              name.style.textDecoration = "line-through";
-              tasksDone++;
-              document.getElementById("taskDone").textContent = tasksDone;
-            } 
-          }
-      }
-     
-      function Update(atag, event) {
-        event.preventDefault();
-        let actions = atag.closest(".actions");
-        let taskItem = actions.closest(".taskItem");
-        let taskInfo = taskItem.querySelector(".taskInfo");
-        let p = taskItem.querySelector("#taskName");
-
-        let input = document.createElement("input");
-        input.setAttribute("type", "text");
-
-        input.setAttribute("id", "updatedtext");
-        input.setAttribute("value", p.textContent);
-
-        p.style.display = "none";
-        setTimeout(() => {
-          taskInfo.appendChild(input);
-          input.focus();
-        }, 200);
-
-        actions.querySelector("#update").style.visibility = "hidden";
-        actions.querySelector("#update").style.transition = "all 0.15s";
-        let oldValue = input.value;
-
-        input.onkeyup = (event) => {
-            let taskInfo = input.parentElement.parentElement;
-
-            // reaching the label for the task
-            let text = input.parentElement.querySelector(".taskName");
-
-            if (event.key == "Enter") {
-                let newValue = input.value;
-
-                text.textContent = newValue;
-
-                text.style.display = "block";
-                input.parentElement.removeChild(input);
-                taskInfo.querySelector(".actions").querySelector("#update").style.visibility = "visible";
-                sendChanges(oldValue, newValue);
-            } 
-        };
-      }
-      function sendChanges(oldVal, newVal) {
-          $.ajax({
-            url: "CRUD/update.php",
-            method: "post",
-            data: {
-              oldname: oldVal,
-              newname: newVal,
-            }})
-            
-            .done((response) => {
-                console.log("data sent !");
-                console.log(response ? "executed": "not executed ");
-              });
-      }
-      // to  import jquery inside js file you should install it as a module using npm 
-      
-      let tasksDone = 0;
-
-      function Done(checkbox) {
-        const elementParent = checkbox.closest(".taskInfo");
-        const name = elementParent.querySelector("#taskName");
-        if (checkbox.checked) {
-          name.style.textDecoration = "line-through";
-          tasksDone++;
-          document.getElementById("taskDone").textContent = tasksDone;
-        } 
-        else {
-          if (tasksDone !== 0) {
-            name.style.textDecoration = "none";
-            tasksDone--;
-            document.getElementById("taskDone").textContent = tasksDone;
-          } 
-          else {
-            name.style.textDecoration = "none";
-            document.getElementById("taskDone").textContent = tasksDone;
-          }
-        }
-        setTrue(name , checkbox);
-      }
-      function setTrue(taskname , checkbox){
-        let task  = taskname.textContent; 
-        $.ajax({
-            url: "CRUD/CheckTasks.php",
-            method : "post",
-            data : {
-              taskname : task ,
-              checkbox_checked  : checkbox.checked ? "yes" : "no"
-            }
-        })
-        .done((response)=>{
-          console.log("done");
-          console.log(response);
-        })
-        
-      }
-
-    </script>
     <script src="js/script.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

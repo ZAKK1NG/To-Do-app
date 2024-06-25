@@ -1,19 +1,18 @@
 <?php 
 // delete using ajax (not done )
+header("location:../index.php");
 session_start(); 
 require "connection.php" ;
-$username = $_SESSION["name"]; 
-echo $username ."<br>"; 
-$taskname =  $_GET["name"]; 
-echo $taskname ; 
+$taskToDelete = $_POST["task"];
+$username  = $_SESSION["name"];
 $sql = "delete from tasks where taskname = ? and username = ? "; 
 $st = $conn->prepare($sql);
-$st->execute([$taskname , $username]) ; 
+$st->execute([$taskToDelete , $username]) ; 
 if ($st->rowCount() == 1 ){
-    echo "done !";
+    echo true;
 } else {
-    echo "not done !";
+    echo false;
 }
-header("location:../index.php");
+
 
 ?>

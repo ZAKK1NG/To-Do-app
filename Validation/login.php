@@ -2,7 +2,7 @@
 
 
 $response ="" ;
- 
+header("location: ../index.php");
 @include "../CRUD/functions.php"; //To fix : no file exists in such path error
 @include "../CRUD/connection.php" ;
 

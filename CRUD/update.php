@@ -3,7 +3,7 @@
 // add => if the oldname = new name (return none)
 // if updated display a modal saying task updated !
 session_start();
-
+header("location: ../index.php");
 require "connection.php" ;
 include "functions.php";
 

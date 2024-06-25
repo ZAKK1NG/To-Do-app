@@ -1,21 +1,25 @@
 <?php  
-include "functions.php";
-header("location: ../index.php");
 session_start(); 
-$username = $_SESSION["name"]; 
+include "functions.php";
 require "connection.php" ; 
-if(isset($_POST["submit"]) ){
+ header("location: ../index.php");
+$username = $_SESSION["name"]; 
+ 
     if(!empty($_POST["task"])){
-        $task = sanitize($_POST["task"]); 
-        $sql = "insert into tasks(username,taskname)  values (?, ?);";
-        $st = $conn->prepare($sql);
-        $st->execute([$username , $task]);
-        
-    } else {
-        die(); 
+          
+            $task = sanitize($_POST["task"]); 
+            $sql = "insert into tasks(username,taskname)  values (?, ?);";
+            $st = $conn->prepare($sql);
+            $st->execute([$username , $task]);        
+            if ($st->rowCount()==1){
+                echo true;
+            } 
+            else {
+                echo false;
+            }
     }
-   
-};
+     
+ 
 
 
 ?>

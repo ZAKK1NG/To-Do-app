@@ -2,7 +2,7 @@
 <?php
 require "../CRUD/connection.php";
 include "../CRUD/functions.php";
-
+header("location: ../index.php");
 // Initialize response variable
 $response = "";
 
